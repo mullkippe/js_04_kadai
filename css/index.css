@@ -1,0 +1,25 @@
+.done {
+    text-decoration: line-through;
+}
+
+body h1 {
+    background-color: blue;
+    color: white;
+    padding-left: 10px;
+
+}
+
+input[type="text"] {
+    padding: 10px 20px;
+    width: 400px;
+    border: 1px solid #1b2538;
+	border-radius: 4px;
+}
+#add-button {
+    border: 1px solid #1b2538;
+	border-radius: 4px;
+    background-color: white;
+    color: red;
+    margin-left: 30px;
+    padding: 10px 20px;
+}

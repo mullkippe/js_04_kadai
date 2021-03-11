@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>To do list</title>
+    <style>
+        /* この中にcssをかけます */
+    </style>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <!-- ブラウザの画面に見える内容 -->
+    <ul></ul>
+
+    <div>
+        <h1>TODOS</h1>
+        <!-- 新しいTOdo -->
+
+        <input type="text" id="newtodo" placeholder="やらなければいけないこと"><button id="add-button">add</button>
+        <!-→idをつけてjsから呼び出しやすくする -->
+    </div>
+
+    <div>
+        <!-- 保存されたデータが表示される箇所　firebase側に送られたデータをアウトプットにデータを持っていきたい -->
+        <div id="output"></div>
+    </div>　　　　
+
+    <!--/ ブラウザの画面に見える内容 -->
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!--** 以下Firebase **-->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <!-- ここにfirebaseのscriptを貼り付ける -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
+
+    <script>
+        //        const buttonList = document.querySelectorAll('button');
+        //        buttonList.forEach((button) => {
+        //            button.addEventListener('click', () => {
+        //                const li = button.closest('li');
+        //                li.classList.add('done');
+        //            });
+        //        });
+        //ここからは新規タスクの登録をできるようにする
+        //（ボタンタグをjsで扱えるようにする）
+        const button = document.getElementById('add-button');
+        button.addEventListener('click', () => {
+            //ボタンをクリックした時にインプットタイプテキストのテキストがほしい
+            const input = document.getElementById('newtodo');
+            console.log(input.value);
+            //タグをjsで作成する。要素（li）を突っ込む
+            const li = document.createElement('li');
+            li.innerText = input.value;
+            //doneボタンの作成
+            const doneButton = document.createElement('button');
+            doneButton.innerText = "done";
+            li.appendChild(doneButton);
+            doneButton.addEventListener('click', () => {
+                //doneボタンの一番近い親要素のliを見つけてくる
+                const li = doneButton.closest('li');
+                li.classList.add('done');
+            });
+            const ul = document.querySelector('ul');
+            ul.appendChild(li);
+        });
+
+        var firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: "",
+            databaseURL: "",
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        //firebaseのデーターベース（保存させる場所）を使いますよと言うjsのコードを貼り付ける
+        const newPostRef = firebase.database().ref();
+        // ここから下にjqueryの処理を書いて練習します
+        // 送信ボタンをクリックされたら次の処理をする
+        $("#add-button").on('click', function() {
+            // データを登録で送る
+            newPostRef.push({
+                //新しいTODOをjsのオブジェクト（データの固まり）にして送る
+                newtodo: $("#newtodo").val()
+            })
+            // 文字を空にする
+            $("#newtodo").val(""); //空にする
+            $("xxx").val(""); //空にする
+        });
+        // 受信処理
+        newPostRef.on("child_added", function(data) {
+            //ここに保存されたデータが全て入ってくる
+            // function (data)のdataにfirebaseのデータが入ってくる
+            //console.logで受信=firebaseに登録されている中身を確認しよう！
+            //テンプレートリテラル `` を活用して変数にhtmlを埋め込もう！
+            let v = data.val();
+            console.log(v, 'firebaseのデータが入ってくる');
+            // ここでデータをhtmlに埋め込む prependには変数を埋め込もう！
+            let str = `<p>${v.newtodo}</p>`;
+            $("#output").prepend(str);
+        });
+        $("xxx").on("keydown", function(event) {
+            // eventの中身をconsole.logでみてみよう！
+        })
+    </script>
+</body>
+
+</html>
